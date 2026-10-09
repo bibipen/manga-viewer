@@ -82,21 +82,53 @@ function turnPage(n, direction) {
   if (animating || n < 1 || n > total || n === current) return;
   animating = true;
 
-  const cls = direction === 'next' ? 'slide-next' : 'slide-prev';
-  page.classList.remove('slide-next', 'slide-prev');
-  void page.offsetWidth;
-  page.classList.add(cls);
+  const oldPage = current;
+  const nextSrc = `halloween${String(n).padStart(2, '0')}.png`;
 
-  window.setTimeout(() => {
-    current = n;
-    page.src = `halloween${String(current).padStart(2, '0')}.png`;
-    updateControls();
-  }, 100);
+  const nextImage = new Image();
+  nextImage.onload = () => {
+    page.style.transition = 'none';
+    page.style.transform = 'translateX(0)';
+    page.style.opacity = '1';
+    page.src = `halloween${String(oldPage).padStart(2, '0')}.png`;
 
-  window.setTimeout(() => {
-    page.classList.remove('slide-next', 'slide-prev');
+    void page.offsetWidth;
+
+    page.style.transition = 'transform 0.28s ease, opacity 0.28s ease';
+    page.style.transform =
+      direction === 'next' ? 'translateX(-45px)' : 'translateX(45px)';
+    page.style.opacity = '0.35';
+
+    setTimeout(() => {
+      page.style.transition = 'none';
+      page.src = nextSrc;
+      page.style.transform =
+        direction === 'next' ? 'translateX(45px)' : 'translateX(-45px)';
+
+      void page.offsetWidth;
+
+      page.style.transition = 'transform 0.28s ease, opacity 0.28s ease';
+      page.style.transform = 'translateX(0)';
+      page.style.opacity = '1';
+
+      current = n;
+      updateControls();
+
+      setTimeout(() => {
+        page.style.transition = '';
+        page.style.transform = '';
+        page.style.opacity = '';
+        animating = false;
+      }, 300);
+    }, 280);
+  };
+
+  nextImage.onerror = () => {
     animating = false;
-  }, 360);
+    alert('次のページ画像を読み込めませんでした。');
+  };
+
+  nextImage.src = nextSrc;
 }
 document.getElementById('start').addEventListener('click',()=>{
  cover.classList.add('hidden'); page.classList.remove('hidden');
