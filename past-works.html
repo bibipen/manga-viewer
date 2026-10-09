@@ -5,10 +5,10 @@
 </style></head><body><main class="wrap"><header><div class="kicker">Illustration & Manga Archive</div><h1>Past Works</h1><p class="intro">これまでの漫画・イラストをまとめています。<br>作品を選ぶと閲覧ページが開きます。</p></header><div class="section-title">Works / 01—13</div><section class="grid" id="grid" aria-label="過去作品一覧"></section><footer>Past Works Archive</footer></main>
 <script>
 const works=[
-{title:"おねだり",image:"イラスト 97.PNG",pages:["イラスト 97.PNG","イラスト 97 2.PNG"]},
-{title:"涙",image:"イラスト 99.PNG",pages:["イラスト 99.PNG","涙 2.PNG"]},
-{title:"キス",image:"イラスト 105.PNG",pages:["イラスト 105.PNG","イラスト 106.PNG"]},
-{title:"おにぎり",image:"イラスト 101.PNG",pages:["イラスト 101.PNG","イラスト 101 2.PNG"]},
+{title:"おねだり",image:"イラスト97.PNG",pages:["イラスト97.PNG","イラスト97 2.PNG"]},
+{title:"涙",image:"イラスト99.PNG",pages:["イラスト99.PNG","涙2.PNG"]},
+{title:"キス",image:"イラスト105.PNG",pages:["イラスト105.PNG","イラスト106.PNG"]},
+{title:"おにぎり",image:"イラスト101.PNG",pages:["イラスト101.PNG","イラスト101 2.PNG"]},
 {title:"作品 05",image:"",pages:[]},{title:"作品 06",image:"",pages:[]},{title:"作品 07",image:"",pages:[]},{title:"作品 08",image:"",pages:[]},{title:"作品 09",image:"",pages:[]},{title:"作品 10",image:"",pages:[]},{title:"作品 11",image:"",pages:[]},{title:"作品 12",image:"",pages:[]},{title:"作品 13",image:"",pages:[]}];
 const grid=document.getElementById("grid");works.forEach((work,index)=>{const card=document.createElement("a");card.className="card";card.href=index<4?("reader.html?work="+(index+1)):"#";if(index>=4)card.addEventListener("click",event=>event.preventDefault());const thumb=document.createElement("div");thumb.className="thumb";if(work.image){const img=document.createElement("img");img.src=encodeURI(work.image);img.alt=work.title;img.onerror=()=>{thumb.innerHTML='<div class="placeholder">サムネイル画像を<br>設定してください</div>';};thumb.appendChild(img)}else{const p=document.createElement("div");p.className="placeholder";p.textContent=`WORK ${String(index+1).padStart(2,"0")}`;thumb.appendChild(p)}const title=document.createElement("div");title.className="title";title.textContent=work.title;const meta=document.createElement("div");meta.className="meta";meta.textContent=work.pages||"漫画・イラスト";card.append(thumb,title,meta);grid.appendChild(card)});
 </script></body></html>
