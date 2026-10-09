@@ -24,10 +24,23 @@ button{font:inherit;cursor:pointer}
 .nav:disabled{opacity:.3;cursor:default}
 .note{text-align:center;color:#777;font-size:11px}
 .hidden{display:none!important}
-.art.flip-next{transform-origin:left center;animation:turnNext .48s ease-in-out}
-.art.flip-prev{transform-origin:right center;animation:turnPrev .48s ease-in-out}
-@keyframes turnNext{0%{transform:rotateY(0deg);opacity:1}45%{transform:rotateY(-78deg);opacity:.15}55%{transform:rotateY(78deg);opacity:.15}100%{transform:rotateY(0deg);opacity:1}}
-@keyframes turnPrev{0%{transform:rotateY(0deg);opacity:1}45%{transform:rotateY(78deg);opacity:.15}55%{transform:rotateY(-78deg);opacity:.15}100%{transform:rotateY(0deg);opacity:1}}
+.art {
+  transition: transform .35s ease, opacity .35s ease;
+}
+.art.slide-next {
+  animation: slideNext .35s ease both;
+}
+.art.slide-prev {
+  animation: slidePrev .35s ease both;
+}
+@keyframes slideNext {
+  from { transform: translateX(35px); opacity: .3; }
+  to   { transform: translateX(0); opacity: 1; }
+}
+@keyframes slidePrev {
+  from { transform: translateX(-35px); opacity: .3; }
+  to   { transform: translateX(0); opacity: 1; }
+}
 @media(prefers-reduced-motion:reduce){.art.flip-next,.art.flip-prev{animation-duration:.01ms}}
 </style>
 </head>
@@ -65,23 +78,25 @@ function updateControls(){
  document.getElementById('prev').disabled=current===1;
  document.getElementById('next').disabled=current===total;
 }
-function turnPage(n, direction){
- if(animating || n<1 || n>total || n===current)return;
- animating=true;
- const cls=direction==='next'?'flip-next':'flip-prev';
- page.classList.remove('flip-next','flip-prev');
- // Restart the animation reliably.
- void page.offsetWidth;
- page.classList.add(cls);
- window.setTimeout(()=>{
-   current=n;
-   page.src=`halloween${String(current).padStart(2,'0')}.png`;
-   updateControls();
- },220);
- window.setTimeout(()=>{
-   page.classList.remove('flip-next','flip-prev');
-   animating=false;
- },490);
+function turnPage(n, direction) {
+  if (animating || n < 1 || n > total || n === current) return;
+  animating = true;
+
+  const cls = direction === 'next' ? 'slide-next' : 'slide-prev';
+  page.classList.remove('slide-next', 'slide-prev');
+  void page.offsetWidth;
+  page.classList.add(cls);
+
+  window.setTimeout(() => {
+    current = n;
+    page.src = `halloween${String(current).padStart(2, '0')}.png`;
+    updateControls();
+  }, 100);
+
+  window.setTimeout(() => {
+    page.classList.remove('slide-next', 'slide-prev');
+    animating = false;
+  }, 360);
 }
 document.getElementById('start').addEventListener('click',()=>{
  cover.classList.add('hidden'); page.classList.remove('hidden');
