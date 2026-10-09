@@ -5,10 +5,10 @@
 </style></head><body><main class="wrap"><div class="top"><a href="past-works.html">← 作品一覧</a><div class="title" id="title">漫画</div><span style="width:58px"></span></div><div class="count" id="count"></div><img class="page" id="page" alt="漫画ページ"><div class="controls"><button id="prev">前へ</button><button id="next">次へ</button></div><div class="hint">左右のボタンでページをめくれます</div></main>
 <script>
 const data={
-1:{title:"おねだり",pages:["イラスト 97.PNG","イラスト 97 2.PNG"]},
-2:{title:"涙",pages:["イラスト 99.PNG","涙 2.PNG"]},
-3:{title:"キス",pages:["イラスト 105.PNG","イラスト 106.PNG"]},
-4:{title:"おにぎり",pages:["イラスト 101.PNG","イラスト 101 2.PNG"]}
+1:{title:"おねだり",pages:["イラスト97.PNG","イラスト97 2.PNG"]},
+2:{title:"涙",pages:["イラスト99.PNG","涙2.PNG"]},
+3:{title:"キス",pages:["イラスト105.PNG","イラスト106.PNG"]},
+4:{title:"おにぎり",pages:["イラスト101.PNG","イラスト101 2.PNG"]}
 };
 const id=Number(new URLSearchParams(location.search).get("work"))||1;
 const work=data[id]||data[1];let current=0;
