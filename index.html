@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#111111">
+<title>Halloween Manga</title>
+<style>
+:root{color-scheme:dark;background:#111;color:#f5f5f5;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:#111}
+body{min-height:100dvh}
+button{font:inherit;cursor:pointer}
+.app{min-height:100dvh;display:flex;flex-direction:column;padding:18px 14px calc(18px + env(safe-area-inset-bottom));gap:14px}
+.top{display:flex;justify-content:space-between;align-items:center;color:#aaa;font-size:11px;letter-spacing:.18em}
+.counter{font-size:12px;letter-spacing:.08em;color:#aaa}
+.stage{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;position:relative}
+.art{display:block;max-width:100%;max-height:calc(100dvh - 150px);width:auto;height:auto;object-fit:contain}
+.cover{width:100%;max-width:480px;display:flex;flex-direction:column;align-items:center;gap:18px}
+.cover img{display:block;max-width:100%;max-height:calc(100dvh - 180px);width:auto;height:auto;object-fit:contain}
+.read{border:0;border-radius:999px;background:#f5f5f5;color:#111;padding:13px 34px;font-weight:600}
+.controls{display:flex;align-items:center;justify-content:center;gap:14px}
+.nav{border:1px solid #444;background:#1b1b1b;color:#f5f5f5;border-radius:999px;padding:10px 20px}
+.nav:disabled{opacity:.3}
+.note{text-align:center;color:#777;font-size:11px}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<main class="app">
+  <header class="top"><span>MANGA / READ</span><span id="label">COVER</span></header>
+  <section class="stage" id="stage">
+    <div class="cover" id="cover">
+      <img src="halloween00.png" alt="ハロウィン漫画 表紙">
+      <button class="read" id="start">読む</button>
+    </div>
+    <img class="art hidden" id="page" alt="漫画ページ">
+  </section>
+  <footer>
+    <div class="controls hidden" id="controls">
+      <button class="nav" id="prev">前へ</button>
+      <span class="counter" id="counter">1 / 8</span>
+      <button class="nav" id="next">次へ</button>
+    </div>
+    <div class="note" id="note">Halloween Manga</div>
+  </footer>
+</main>
+<script>
+const cover=document.getElementById('cover');
+const page=document.getElementById('page');
+const controls=document.getElementById('controls');
+const label=document.getElementById('label');
+const counter=document.getElementById('counter');
+const note=document.getElementById('note');
+let current=1;
+const total=8;
+function showPage(n){
+ current=Math.max(1,Math.min(total,n));
+ page.src=`halloween${String(current).padStart(2,'0')}.png`;
+ page.alt=`漫画 ${current}ページ目`;
+ counter.textContent=`${current} / ${total}`;
+ label.textContent=`PAGE ${String(current).padStart(2,'0')}`;
+ document.getElementById('prev').disabled=current===1;
+ document.getElementById('next').disabled=current===total;
+}
+document.getElementById('start').addEventListener('click',()=>{
+ cover.classList.add('hidden'); page.classList.remove('hidden'); controls.classList.remove('hidden'); note.textContent='左右にスワイプ、またはボタンでページ移動'; showPage(1);
+});
+document.getElementById('prev').addEventListener('click',()=>showPage(current-1));
+document.getElementById('next').addEventListener('click',()=>showPage(current+1));
+let startX=0,startY=0;
+const stage=document.getElementById('stage');
+stage.addEventListener('touchstart',e=>{if(!page.classList.contains('hidden')){startX=e.changedTouches[0].clientX;startY=e.changedTouches[0].clientY;}},{passive:true});
+stage.addEventListener('touchend',e=>{if(page.classList.contains('hidden'))return;const dx=e.changedTouches[0].clientX-startX;const dy=e.changedTouches[0].clientY-startY;if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)*1.2)showPage(current+(dx<0?1:-1));},{passive:true});
+page.addEventListener('error',()=>{page.alt='画像を読み込めません。halloween01.png〜halloween08.png がリポジトリにあるか確認してください。';});
+</script>
+</body>
+</html>
