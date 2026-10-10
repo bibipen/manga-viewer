@@ -42,10 +42,10 @@ footer{border-top:1px solid var(--line);margin-top:36px;padding-top:18px;font-si
 </main>
 <script>
 const works=[
- {title:'おねだり',thumb:'thumb-01.jpg',work:1},
- {title:'涙',thumb:'thumb-02.jpg',work:2},
- {title:'シガーキス',thumb:'thumb-03.jpg',work:3},
- {title:'おにぎり',thumb:'thumb-04.jpg',work:4}
+ {title:'おねだり',thumb:'thumb-01.jpg',work:1,pages:2},
+ {title:'涙',thumb:'thumb-02.jpg',work:2,pages:2},
+ {title:'シガーキス',thumb:'thumb-03.jpg',work:3,pages:3},
+ {title:'おにぎり',thumb:'thumb-04.jpg',work:4,pages:2}
 ];
 const grid=document.getElementById('grid');
 for(const work of works){
@@ -68,7 +68,7 @@ for(const work of works){
  title.textContent=work.title;
  const meta=document.createElement('div');
  meta.className='meta';
- meta.textContent='2ページ';
+meta.textContent=work.pages+'ページ';
  card.append(thumb,title,meta);
  grid.appendChild(card);
 }
