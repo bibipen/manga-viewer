@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ja"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#111111"><title>Halloween Manga</title>
+<style>
+:root{color-scheme:dark;background:#111;color:#f5f5f5;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#111}body{min-height:100dvh}button{font:inherit;cursor:pointer}
+.app{min-height:100dvh;display:flex;flex-direction:column;padding:18px 14px calc(18px + env(safe-area-inset-bottom));gap:14px}
+.top{display:flex;justify-content:space-between;align-items:center;color:#aaa;font-size:11px;letter-spacing:.18em}
+.counter{font-size:12px;letter-spacing:.08em;color:#aaa}
+.stage{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.art{display:block;max-width:100%;max-height:calc(100dvh - 150px);width:auto;height:auto;object-fit:contain;box-shadow:0 3px 18px #0008}
+.cover,.intro{width:100%;max-width:480px;display:flex;flex-direction:column;align-items:center;gap:18px}
+.cover img,.intro img{display:block;max-width:100%;max-height:calc(100dvh - 180px);width:auto;height:auto;object-fit:contain;box-shadow:0 3px 18px #0008}
+.read{border:0;border-radius:999px;background:#f5f5f5;color:#111;padding:13px 34px;font-weight:600}
+.controls{display:flex;align-items:center;justify-content:center;gap:14px}
+.nav{border:1px solid #444;background:#1b1b1b;color:#f5f5f5;border-radius:999px;padding:10px 20px}.nav:disabled{opacity:.3;cursor:default}
+.note{text-align:center;color:#777;font-size:11px}.hidden{display:none!important}
+.art{transition:transform .35s ease,opacity .35s ease}
+@media(prefers-reduced-motion:reduce){.art{animation-duration:.01ms}}
+</style></head><body>
+<main class="app">
+<header class="top"><span>Trick or Trick!?</span><span id="label">COVER</span></header>
+<section class="stage" id="stage">
+<div class="cover" id="cover"><img src="halloween00.png" alt="ハロウィン漫画 表紙"><button class="read" id="start">読む</button></div>
+<div class="intro hidden" id="intro"><img src="Introduction.png" alt="登場人物紹介"><button class="read" id="startManga">漫画を読む</button></div>
+<img class="art hidden" id="page" alt="漫画ページ">
+</section>
+<footer><div class="controls hidden" id="controls"><button class="nav" id="prev">前へ</button><span class="counter" id="counter">1 / 8</span><button class="nav" id="next">次へ</button></div><div class="note" id="note">Halloween</div></footer>
+</main>
+<script>
+const cover=document.getElementById('cover'),intro=document.getElementById('intro'),page=document.getElementById('page'),controls=document.getElementById('controls'),label=document.getElementById('label'),counter=document.getElementById('counter'),note=document.getElementById('note');
+const total=8;let current=1,animating=false,view='cover';
+function updateControls(){counter.textContent=`${current} / ${total}`;label.textContent=`PAGE ${String(current).padStart(2,'0')}`;document.getElementById('prev').disabled=false;document.getElementById('next').disabled=current===total}
+function showIntro(){view='intro';cover.classList.add('hidden');page.classList.add('hidden');intro.classList.remove('hidden');controls.classList.add('hidden');label.textContent='CHARACTERS';note.textContent='登場人物紹介'}
+function startManga(){view='page';intro.classList.add('hidden');cover.classList.add('hidden');page.classList.remove('hidden');controls.classList.remove('hidden');current=1;page.src='halloween01.png';updateControls();note.textContent='左右にスワイプ、またはボタンでページをめくれます'}
+function turnPage(n,direction){if(animating||n<1||n>total||n===current)return;animating=true;const oldPage=current,nextSrc=`halloween${String(n).padStart(2,'0')}.png`,nextImage=new Image();nextImage.onload=()=>{page.style.transition='none';page.style.transform='translateX(0)';page.style.opacity='1';page.src=`halloween${String(oldPage).padStart(2,'0')}.png`;void page.offsetWidth;page.style.transition='transform 0.28s ease, opacity 0.28s ease';page.style.transform=direction==='next'?'translateX(-45px)':'translateX(45px)';page.style.opacity='0.35';setTimeout(()=>{page.style.transition='none';page.src=nextSrc;page.style.transform=direction==='next'?'translateX(45px)':'translateX(-45px)';void page.offsetWidth;page.style.transition='transform 0.28s ease, opacity 0.28s ease';page.style.transform='translateX(0)';page.style.opacity='1';current=n;updateControls();setTimeout(()=>{page.style.transition='';page.style.transform='';page.style.opacity='';animating=false},300)},280)};nextImage.onerror=()=>{animating=false;alert('次のページ画像を読み込めませんでした。')};nextImage.src=nextSrc}
+document.getElementById('start').addEventListener('click',showIntro);document.getElementById('startManga').addEventListener('click',startManga);
+document.getElementById('prev').addEventListener('click',()=>{if(current===1){showIntro();return}turnPage(current-1,'prev')});document.getElementById('next').addEventListener('click',()=>turnPage(current+1,'next'));
+let startX=0,startY=0;const stage=document.getElementById('stage');
+stage.addEventListener('touchstart',e=>{if(view==='page'){startX=e.changedTouches[0].clientX;startY=e.changedTouches[0].clientY}},{passive:true});
+stage.addEventListener('touchend',e=>{if(view!=='page')return;const dx=e.changedTouches[0].clientX-startX,dy=e.changedTouches[0].clientY-startY;if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)*1.2){if(dx<0)turnPage(current+1,'next');else if(current===1)showIntro();else turnPage(current-1,'prev')}},{passive:true});
+page.addEventListener('error',()=>{note.textContent='画像を読み込めません。画像ファイル名を確認してください。'});
+</script></body></html>
